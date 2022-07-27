@@ -1,0 +1,67 @@
+{
+   "variables":{
+     "Client_ID": "",
+     "Client_Secret": "",
+     "Tenant_ID": "",
+     "Subscription_ID": "",
+     "rg_name": "",
+     "image_name": "",
+     "OS_Type": "",
+     "Image_Publisher": "",
+     "Image_Offer": "",
+     "Image_SKU": "",
+     "Communicator": "",
+     "Winrm_Use_SS1":"",
+     "Winrm_Insecure": "",
+     "Winrm_Timeout": "",
+     "Winrm_Username": "",
+     "Dept": "",
+     "Task": "",
+     "VM_Size": ""
+  },
+   "builders": [{
+      "type": "azure-arm",
+  
+      "client_id": "{{user `Client_ID`}}",
+      "client_secret": "{{user `Client_Secret`}}",
+      "tenant_id": "{{user `Tenant_ID`}}",
+      "subscription_id": "{{user `Subscription_ID`}}",
+  
+      "managed_image_resource_group_name": "{{user `rg_name`}}",
+      "managed_image_name": "{{user   `image_name`}}",
+  
+      "os_type": "{{user `OS_Type`}}",
+      "image_publisher": "{{user `Image_Publisher`}}",
+      "image_offer": "{{user `Image_Offer`}}",
+      "image_sku": "{{user `Image_SKU`}}",
+  
+      "communicator": "{{user `Communicator`}}",
+      "winrm_use_ssl": "{{user `Winrm_Use_SS1`}}",
+      "winrm_insecure": "{{user `Winrm_Insecure`}}",
+      "winrm_timeout": "{{user `Winrm_Timeout`}}",
+      "winrm_username": "{{user `Winrm_Username`}}",
+  
+      "azure_tags": {
+          "dept": "{{user `Dept`}}",
+          "task": "{{user `Task`}}"
+      },
+  
+      "build_resource_group_name": "{{user `rg_name`}}",
+      "vm_size": "{{user `VM_Size`}}"
+    }],
+    "provisioners": [
+      {
+        "type": "powershell",
+        "script": "./iis-install.ps1"
+      },
+      {
+        "type": "powershell",
+        "inline": [
+          "while ((Get-Service RdAgent).Status -ne 'Running') { Start-Sleep -s 5 }",
+          "while ((Get-Service WindowsAzureGuestAgent).Status -ne 'Running') { Start-Sleep -s 5 }",
+          "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quiet /quit",
+          "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
+        ],
+        "pause_before": "5m"
+      }]
+}

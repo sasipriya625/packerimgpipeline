@@ -1,0 +1,20 @@
+{
+    "Client_ID": "a418ab71-d84e-4f09-9b1a-955ada1f22f5",
+    "Client_Secret": "WJ98Q~Cdu8fdlmXj2BcsQjdnv.t_xafykeUllb-e",
+    "Tenant_ID": "06b3cf2a-506d-4c27-94f6-24db616e3350",
+    "Subscription_ID": "a3d75c10-c135-4e6b-8f4e-f22711d010ef",
+    "rg_name": "sasiRG2",
+     "image_name": "sasipackerwndws1Image",
+     "OS_Type": "Windows",
+     "Image_Publisher": "MicrosoftWindowsServer",
+     "Image_Offer": "WindowsServer",
+     "Image_SKU": "2016-Datacenter",
+     "Communicator": "winrm",
+     "Winrm_Use_SS1":"true",
+     "Winrm_Insecure": "true",
+     "Winrm_Timeout": "15m",
+     "Winrm_Username": "packer",
+     "Dept": "Engineering",
+     "Task": "Image deployment",
+     "VM_Size": "Standard_D2_v2"
+}
